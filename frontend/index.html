@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Инструкции по БЖД</title>
+    <link rel="stylesheet" href="public/styles.css">
+    <link rel="stylesheet" href="public/fonts.css">
+    <link rel="apple-touch-icon" sizes="180x180" href="images/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="images/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="images/favicon-16x16.png">
+    <link rel="manifest" href="images/site.webmanifest">
+</head>
+<body x-data="{objects: [], active: 'documents', isOpen: false, currentMaterial: ''}">
+
+    <template x-if="isOpen">
+        <div  class="sidebar top-0 bottom-0 lg:left-0 p-2 w-full overflow-y-auto-text-center backdrop-opacity-10 backdrop-invert bg-black/80">
+            <button @click="isOpen = false" class="bg-red-600 w-52 py-2 rounded-md text-white mt-6 ml-10">
+                Закрыть
+            </button>
+
+            <div class="flex justify-center items-center">
+                <template x-if="active == 'images'">
+                    <img class="my-2 h-auto max-w-full"   :src="currentMaterial" alt="">
+                </template>
+
+                <template x-if="active == 'videos'">
+                    <video controls class="my-2" width="85%":src="currentMaterial"></video>
+                </template>
+
+                <template x-if="active == 'documents'">
+                    <embed class="my-2" width="100%" height="1000px" :src="currentMaterial" type="application/pdf">
+                </template>
+            </div>
+        </div>
+    </template>
+    
+    <template x-if="!isOpen">
+        <header class="flex justify-between px-20 bg-blue-700 h-20 items-center"
+        x-data="{
+
+            getDataAxios(typeOfData){
+                path = 'http://localhost/api/v1/' + typeOfData
+                fetch(path)
+                .then((response) =>{
+                    return response.json()
+                })
+                .then((data) => {
+                    active = typeOfData
+                    switch(typeOfData){
+                        case 'documents':
+                            objects = data.documents
+                            
+                            break
+        
+                        case 'images':
+                            objects = data.images
+                            break
+        
+                        case 'videos':
+                            objects = data.videos
+                            break
+        
+                        default:
+                            console.log('error')
+                            break
+                    }
+                })
+            } 
+        }"
+        >
+            <div class="text-white text-lg">
+                Инструкции по БЖД
+            </div>
+            <nav x-init="getDataAxios('documents')">
+                
+                <template x-if="active == 'documents'">
+                    <button @click="getDataAxios('documents')" class="bg-red-600 px-5 py-2 mx-2 rounded-md text-white">Документы</button>
+                </template>
+
+                <template x-if="active != 'documents'">
+                    <button @click="getDataAxios('documents')" class="bg-white px-5 py-2 mx-2 rounded-md text-blue-700">Документы</button>
+                </template>
+
+                <template x-if="active == 'images'">
+                    <button @click="getDataAxios('images')" class="bg-red-600 px-5 py-2 mx-2 rounded-md text-white">Изображения</button>
+                </template>
+
+                <template x-if="active != 'images'">
+                    <button @click="getDataAxios('images')" class="bg-white px-5 py-2 mx-2 rounded-md text-blue-700">Изображения</button>
+                </template>
+
+                <template x-if="active == 'videos'">
+                    <button @click="getDataAxios('videos')" class="bg-red-600 px-5 py-2 mx-2 rounded-md text-white">Видеоматериалы</button>
+                </template>
+
+                <template x-if="active != 'videos'">
+                    <button @click="getDataAxios('videos')" class="bg-white px-5 py-2 mx-2 rounded-md text-blue-700">Видеоматериалы</button>
+                </template>
+                
+            </nav>
+        </header>
+    </template >
+
+        <template x-if="!isOpen">
+            <div 
+                class="mx-20 my-10 grid grid-cols-3 gap-5" 
+                x-data="{
+                    shodData(file){
+                        currentMaterial = file
+                        isOpen = true
+                    }
+                }"
+            >
+                <template x-for="object in objects">
+                    <!-- <a target ="_blank" :href="object.file"> -->
+                        <div @click="shodData(object.file)" class="bg-gray-200 flex shadow-md w-80 h-40 items-center text-center justify-center mx-10 rounded-md hover:bg-blue-700 hover:text-white">
+                            <div class="">
+                                <h2 x-text="object.title"></h2>
+                                <h3 x-text="object.datePublished"></h3>
+                            </div>
+                        </div>
+                    <!-- </a> -->
+                    
+                </template>
+            </div>
+        </template>
+    <script src="public/script.js"></script>    
+</body>
+</html>

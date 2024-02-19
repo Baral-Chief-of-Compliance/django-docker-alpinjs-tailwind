@@ -1,0 +1,11 @@
+FROM python:3.10-slim-bullseye
+
+
+RUN mkdir -p /home/app
+WORKDIR /home/app
+COPY ./requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
+CMD ["gunicorn", "-b", "0.0.0.0:8001", "project.wsgi:application"]
+
+EXPOSE 8001
