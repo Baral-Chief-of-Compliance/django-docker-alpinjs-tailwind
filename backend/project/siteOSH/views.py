@@ -15,7 +15,7 @@ def getDataFromModel(model: Model) -> list:
             {
                 "id": object["id"],
                 "title": object["title"],
-                "file": "http://localhost/media/" + object["file"],
+                "file": "https://sparlex.ru/media/" + object["file"],
                 "datePublished": object["datePublished"].strftime("%d.%m.%Y") 
             }
         )

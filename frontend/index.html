@@ -40,7 +40,7 @@
         x-data="{
 
             getDataAxios(typeOfData){
-                path = 'http://localhost/api/v1/' + typeOfData
+                path = 'https://sparlex.ru/api/v1/' + typeOfData
                 fetch(path)
                 .then((response) =>{
                     return response.json()
