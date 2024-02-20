@@ -2,4 +2,6 @@ FROM nginx:alpine
 
 RUN mkdir -p /home/app/backend
 RUN mkdir -p /home/app/frontend
+RUN mkdir -p /home/game
+COPY ./game/* /home/app/game
 COPY ./conf.d /etc/nginx/conf.d
